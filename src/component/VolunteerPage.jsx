@@ -1,20 +1,58 @@
-import React from "react";
-// import volunteerImage from "./8ad8a0ad-df06-442a-b8ac-87ea02147435.png";
+import React, { useState, useRef, useEffect } from "react";
 
-const VolunteerPage = () => {
+const AccordionBox = ({ index, activeIndex, toggleBox, title, content }) => {
+  const contentRef = useRef(null);
+  const isActive = activeIndex === index;
+
   return (
     <div
-      className="min-h-screen flex items-center justify-center px-6 py-10 md:m-5"
-    //   style={{ backgroundImage: `url('./img5.jpg')` }}
+      onClick={() => toggleBox(index)}
+      className="border border-gray-300 rounded-xl p-4 mb-4 bg-white shadow-sm cursor-pointer transition-all duration-300 relative"
     >
-      <div className="bg-white bg-opacity-80 rounded-3xl shadow-lg  max-w-7xl w-full flex flex-col md:flex-row overflow-hidden">
+      <div className="flex justify-between items-center">
+        <span
+          className={`font-medium transition-colors duration-300 ${
+            isActive ? "text-orange-600" : "text-gray-800"
+          }`}
+        >
+          {title}
+        </span>
+        <span
+          className={`text-xl transform transition-transform duration-300 ${
+            isActive ? "rotate-90 text-orange-600" : "rotate-0 text-gray-800"
+          }`}
+        >
+          →
+        </span>
+      </div>
+
+      <div
+        ref={contentRef}
+        className={`transition-all duration-300 ease-in-out overflow-hidden`}
+        style={{
+          maxHeight: isActive ? contentRef.current?.scrollHeight + "px" : "0px",
+        }}
+      >
+        <p className="text-gray-600 text-sm mt-3">{content}</p>
+      </div>
+    </div>
+  );
+};
+
+const VolunteerPage = () => {
+  const [activeIndex, setActiveIndex] = useState(null);
+
+  const toggleBox = (index) => {
+    setActiveIndex(activeIndex === index ? null : index);
+  };
+
+  return (
+    <div className="min-h-screen flex items-center justify-center px-6 py-10 md:m-5">
+      <div className="bg-white bg-opacity-90 rounded-3xl shadow-lg max-w-7xl w-full flex flex-col md:flex-row overflow-hidden">
         {/* Left Section - Image */}
         <div className="md:w-1/2 p-4 flex justify-center items-center">
           <div className="relative w-full max-w-md">
-            {/* Orange Border Over Image */}
             <div className="absolute inset-0 border-[3px] border-orange-500 rounded-2xl pointer-events-none m-[10px] z-10"></div>
-
-            {/* Image */}
             <img
               src="./bg-1.jpg"
               alt="Volunteers"
@@ -25,7 +63,9 @@ const VolunteerPage = () => {
 
         {/* Right Section - Content */}
         <div className="md:w-1/2 p-8">
-          <p className="text-3xl text-orange-600 font-medium mb-2 sevillana-regular">❤️ Join us</p>
+          <p className="text-3xl text-orange-600 font-medium mb-2 sevillana-regular">
+            ❤️ Join us
+          </p>
           <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4 prata-regular">
             Why We Need You Become a Volunteer
           </h2>
@@ -34,30 +74,28 @@ const VolunteerPage = () => {
             grantmaking, and employee engagement strategies.
           </p>
 
-          {/* Box 1 - Highlight */}
-          <div className="border border-gray-300 rounded-xl p-4 mb-4 bg-white shadow-sm">
-            <p className="text-orange-600 font-semibold mb-2">
-              Recognition and Fulfillment
-            </p>
-            <p className="text-gray-600 text-sm">
-              Aonsectetur adipiscing elit Aenean scelerisque augue vitae consequat. Jusque
-              eget congue velit in cursus leo sodales the turpis euismod quis sapien euismod
-              quis sapien. The E-learning is suitable for students, professionals, and anyone
-              interested.
-            </p>
-          </div>
-
-          {/* Box 2 - Button */}
-          <div className="border border-gray-300 rounded-xl p-4 mb-4 flex justify-between items-center hover:bg-gray-100 cursor-pointer transition">
-            <span className="text-gray-700 font-medium">Why Join Us as a Volunteer?</span>
-            <span className="text-xl">→</span>
-          </div>
-
-          {/* Box 3 - Button */}
-          <div className="border border-gray-300 rounded-xl p-4 flex justify-between items-center hover:bg-gray-100 cursor-pointer transition">
-            <span className="text-gray-700 font-medium">Be Part of a Community</span>
-            <span className="text-xl">→</span>
-          </div>
+          {/* Accordion Boxes */}
+          <AccordionBox
+            index={1}
+            activeIndex={activeIndex}
+            toggleBox={toggleBox}
+            title="Recognition and Fulfillment"
+            content="Aonsectetur adipiscing elit Aenean scelerisque augue vitae consequat. Jusque eget congue velit in cursus leo sodales the turpis euismod quis sapien euismod quis sapien. The E-learning is suitable for students, professionals, and anyone interested."
+          />
+          <AccordionBox
+            index={2}
+            activeIndex={activeIndex}
+            toggleBox={toggleBox}
+            title="Why Join Us as a Volunteer?"
+            content="Becoming a volunteer helps you grow personally and professionally while giving back to society. It builds community, connection, and impact."
+          />
+          <AccordionBox
+            index={3}
+            activeIndex={activeIndex}
+            toggleBox={toggleBox}
+            title="Be Part of a Community"
+            content="Join like-minded individuals who are committed to making a difference. Collaborate, learn, and grow together as a powerful team."
+          />
         </div>
       </div>
     </div>
